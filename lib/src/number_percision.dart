@@ -7,6 +7,7 @@
 ///
 /// Author：luoyelusheng@gmail.com
 ///
+library;
 import 'dart:math';
 
 /// The smallest possible value of an int within 64 bits.
@@ -53,7 +54,7 @@ class NP {
     final dLen = digitLength(number);
     if (dLen <= 20) {
       if (number is String) {
-        if (number.toLowerCase().indexOf('e') == -1) {
+        if (!number.toLowerCase().contains('e')) {
           return num.parse(number.replaceAll('.', ''));
         }
         return num.parse(num.parse(number)

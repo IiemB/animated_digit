@@ -5,27 +5,27 @@ import 'package:flutter/material.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(AnimatedDigitWidgetExample());
+  runApp(const AnimatedDigitWidgetExample());
 }
 
 class AnimatedDigitWidgetExample extends StatefulWidget {
-  AnimatedDigitWidgetExample({Key? key}) : super(key: key);
+  const AnimatedDigitWidgetExample({Key? key}) : super(key: key);
 
   @override
-  _AnimatedDigitWidgetExampleState createState() =>
+  State<AnimatedDigitWidgetExample> createState() =>
       _AnimatedDigitWidgetExampleState();
 }
 
-class _AnimatedDigitWidgetExampleState extends State<AnimatedDigitWidgetExample>
-    with SingleTickerProviderStateMixin {
-  AnimatedDigitController _controller = AnimatedDigitController(111.987);
+class _AnimatedDigitWidgetExampleState
+    extends State<AnimatedDigitWidgetExample> {
+  final AnimatedDigitController _controller = AnimatedDigitController(111.987);
 
-  double textscaleFactor = 1.0;
+  double textScaleFactor = 1.0;
 
   @override
   void initState() {
     super.initState();
-    textscaleFactor = MediaQuery.textScaleFactorOf(context);
+    textScaleFactor = MediaQuery.textScalerOf(context).scale(1.0);
   }
 
   @override
@@ -48,7 +48,7 @@ class _AnimatedDigitWidgetExampleState extends State<AnimatedDigitWidgetExample>
 
   void updateFontScale() {
     setState(() {
-      textscaleFactor = textscaleFactor == 1.0 ? 1.2 : 1.0;
+      textScaleFactor = textScaleFactor == 1.0 ? 1.2 : 1.0;
     });
   }
 
@@ -63,45 +63,46 @@ class _AnimatedDigitWidgetExampleState extends State<AnimatedDigitWidgetExample>
       showPerformanceOverlay: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Animated Digit Widget Example"),
+          title: const Text("Animated Digit Widget Example"),
         ),
         body: Center(
           child: Column(
             children: <Widget>[
-              SizedBox(height: 80),
+              const SizedBox(height: 80),
               ValueListenableBuilder(
                 valueListenable: _controller,
                 builder: (BuildContext context, num value, Widget? child) {
                   return Text(
                     "current value:$value",
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 28,
                     ),
                   );
                 },
               ),
-              SizedBox(height: 80),
+              const SizedBox(height: 80),
               AnimatedDigitWidget(
                 controller: _controller,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               AnimatedDigitWidget(
                 controller: _controller,
-                textStyle: TextStyle(color: Colors.orange, fontSize: 30),
+                textStyle: const TextStyle(color: Colors.orange, fontSize: 30),
                 enableSeparator: true,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               AnimatedDigitWidget(
                 controller: _controller,
-                textStyle: TextStyle(color: Colors.pinkAccent, fontSize: 30),
+                textStyle:
+                    const TextStyle(color: Colors.pinkAccent, fontSize: 30),
                 enableSeparator: true,
                 fractionDigits: 1,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               AnimatedDigitWidget(
                 controller: _controller,
-                textStyle: TextStyle(color: Colors.cyan, fontSize: 30),
+                textStyle: const TextStyle(color: Colors.cyan, fontSize: 30),
                 curve: Curves.easeOutCubic,
                 enableSeparator: true,
                 fractionDigits: 2,
@@ -116,7 +117,7 @@ class _AnimatedDigitWidgetExampleState extends State<AnimatedDigitWidgetExample>
                   ),
                   ValueColor(
                     condition: () => _controller.value >= 2999,
-                    color: Color.fromARGB(255, 247, 306, 24),
+                    color: const Color.fromARGB(255, 247, 306, 24),
                   ),
                   ValueColor(
                     condition: () => _controller.value >= 3999,
@@ -136,10 +137,10 @@ class _AnimatedDigitWidgetExampleState extends State<AnimatedDigitWidgetExample>
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               AnimatedDigitWidget(
                 controller: _controller,
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   color: Color.fromARGB(255, 85, 226, 179),
                   fontSize: 30,
                 ),
@@ -151,7 +152,7 @@ class _AnimatedDigitWidgetExampleState extends State<AnimatedDigitWidgetExample>
                 prefix: "\$",
                 suffix: "€",
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Container(
                 width: 188,
                 height: 50,
@@ -163,7 +164,7 @@ class _AnimatedDigitWidgetExampleState extends State<AnimatedDigitWidgetExample>
                   data: SingleDigitData(
                     useTextSize: false,
                     builder: (size, value, isNumber, child) {
-                      return isNumber ? child : FlutterLogo();
+                      return isNumber ? child : const FlutterLogo();
                     },
                   ),
                   child: AnimatedDigitWidget(
@@ -183,44 +184,44 @@ class _AnimatedDigitWidgetExampleState extends State<AnimatedDigitWidgetExample>
           children: [
             FloatingActionButton(
               onPressed: _add,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             FloatingActionButton(
               onPressed: updateFontScale,
-              child: Icon(Icons.font_download),
+              child: const Icon(Icons.font_download),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             FloatingActionButton(
               onPressed: _reset,
-              child: Icon(Icons.restart_alt),
+              child: const Icon(Icons.restart_alt),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             FloatingActionButton(
               onPressed: _remove,
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             FloatingActionButton(
               onPressed: _addDecimal,
-              child: Icon(Icons.add_box_outlined),
               tooltip: "add decimal",
+              child: const Icon(Icons.add_box_outlined),
             ),
           ],
         ),
       ),
       builder: (context, home) {
         return MediaQuery(
-          data:
-              MediaQuery.of(context).copyWith(textScaleFactor: textscaleFactor),
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: TextScaler.linear(textScaleFactor)),
           child: home!,
         );
       },

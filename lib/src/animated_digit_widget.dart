@@ -21,10 +21,10 @@ class WidgetsBindingx {
 ///
 /// [value] is default display result
 ///
-typedef String FormatValue(String value);
+typedef FormatValue = String Function(String value);
 
 /// #### 自定义每一个 Widget
-typedef Widget AnimatedSingleWidgetBuilder(
+typedef AnimatedSingleWidgetBuilder = Widget Function(
   Size size,
   String value,
   bool isNumber,
@@ -32,10 +32,10 @@ typedef Widget AnimatedSingleWidgetBuilder(
 );
 
 /// #### 当值符合条件时，改变颜色
-typedef TextStyle ValueChangeTextStyle(TextStyle style);
+typedef ValueChangeTextStyle = TextStyle Function(TextStyle style);
 
 /// #### 当值符合条件时，改变颜色
-typedef bool ValueColorCondition();
+typedef ValueColorCondition = bool Function();
 
 /// #### 用来描述符合条件的 value 字体颜色
 ///
@@ -123,10 +123,10 @@ class SingleDigitData {
 class SingleDigitProvider extends InheritedWidget {
   /// The [SingleDigitData] `DI` provider widget
   const SingleDigitProvider({
-    Key? key,
+    super.key,
     required this.data,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   final SingleDigitData data;
 
@@ -172,7 +172,7 @@ class AnimatedDigitController extends ValueNotifier<num> {
   /// ```
   /// AnimatedDigitController(99.99)
   /// ```
-  AnimatedDigitController(num initialValue) : super(initialValue);
+  AnimatedDigitController(super.initialValue);
 
   bool _dispose = false;
 
@@ -416,7 +416,7 @@ class AnimatedDigitWidget extends StatefulWidget {
 
   /// see [AnimatedDigitWidget]
   AnimatedDigitWidget({
-    Key? key,
+    super.key,
     TextStyle? textStyle,
     this.controller,
     this.value,
@@ -437,8 +437,7 @@ class AnimatedDigitWidget extends StatefulWidget {
   })  : assert(separateLength >= 1,
             "@separateLength at least greater than or equal to 1"),
         assert(!(value == null && controller == null),
-            "the @value & @controller cannot be null at the same time"),
-        super(key: key) {
+            "the @value & @controller cannot be null at the same time") {
     if (textStyle != null) {
       if (textStyle.color == null) {
         _textStyle = textStyle.copyWith(color: Colors.black);
@@ -451,9 +450,7 @@ class AnimatedDigitWidget extends StatefulWidget {
   }
 
   @override
-  _AnimatedDigitWidgetState createState() {
-    return _AnimatedDigitWidgetState();
-  }
+  State<AnimatedDigitWidget> createState() => _AnimatedDigitWidgetState();
 }
 
 class _AnimatedDigitWidgetState extends State<AnimatedDigitWidget>
@@ -558,8 +555,8 @@ class _AnimatedDigitWidgetState extends State<AnimatedDigitWidget>
 
   String _formatNum(String numstr, {int fractionDigits = 2}) {
     String result;
-    final String _numstr = isNegative ? numstr.replaceFirst("-", "") : numstr;
-    final List<String> numSplitArr = num.parse(_numstr).toString().split('.');
+    final String numstr0 = isNegative ? numstr.replaceFirst("-", "") : numstr;
+    final List<String> numSplitArr = num.parse(numstr0).toString().split('.');
     if (numSplitArr.length < 2) {
       numSplitArr.add("".padRight(fractionDigits, '0'));
     }
@@ -572,9 +569,11 @@ class _AnimatedDigitWidgetState extends State<AnimatedDigitWidget>
       int len = digitList.length - 1;
       final separateSymbol = widget.separateSymbol ?? "";
       if (separateSymbol.isNotEmpty) {
-        for (int index = 0, i = len; i >= 0; index++, i--)
-          if (index % widget.separateLength == 0 && i != len)
+        for (int index = 0, i = len; i >= 0; index++, i--) {
+          if (index % widget.separateLength == 0 && i != len) {
             digitList[i] += separateSymbol;
+          }
+        }
       }
     }
     // handle fraction digits
@@ -647,6 +646,8 @@ class _AnimatedDigitWidgetState extends State<AnimatedDigitWidget>
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
+      textBaseline: TextBaseline.alphabetic,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
       children: [
         if (widget.prefix != null) _buildChangeTextColorWidget(widget.prefix!),
         _buildNegativeSymbol(),
@@ -693,13 +694,13 @@ class _AnimatedDigitWidgetState extends State<AnimatedDigitWidget>
   }
 
   Widget _buildNegativeSymbol() {
-    final String symbolKey = "_AdwChildSymbol";
+    const String symbolKey = "_AdwChildSymbol";
     Widget secondChild = _singleDigitData?._buildChangeTextColorWidget(
-            "-", style, ValueKey(symbolKey)) ??
-        Text("-", key: ValueKey(symbolKey), style: style);
+            "-", style, const ValueKey(symbolKey)) ??
+        Text("-", key: const ValueKey(symbolKey), style: style);
     return AnimatedCrossFade(
-      key: ValueKey("_AdwAnimaNegativeSymbol"),
-      firstChild: Text("", key: ValueKey(symbolKey), style: style),
+      key: const ValueKey("_AdwAnimaNegativeSymbol"),
+      firstChild: Text("", key: const ValueKey(symbolKey), style: style),
       secondChild: secondChild,
       sizeCurve: widget.curve,
       firstCurve: widget.curve,
@@ -711,10 +712,10 @@ class _AnimatedDigitWidgetState extends State<AnimatedDigitWidget>
     );
   }
 
-  void _setValue(Key? _aswsKey, String value) {
-    assert(_aswsKey != null);
-    if (_aswsKey is GlobalKey<_AnimatedSingleWidgetState>) {
-      _aswsKey.currentState?.setValue(value);
+  void _setValue(Key? aswsKey, String value) {
+    assert(aswsKey != null);
+    if (aswsKey is GlobalKey<_AnimatedSingleWidgetState>) {
+      aswsKey.currentState?.setValue(value);
     }
   }
 
@@ -957,8 +958,8 @@ class _AnimatedSingleWidgetState extends State<_AnimatedSingleWidget> {
         width: valueSize.width,
         height: valueSize.height,
         decoration: _boxDecoration,
-        child: child,
         duration: _duration,
+        child: child,
       );
     } else {
       child = Container(
@@ -1024,10 +1025,5 @@ class _AnimatedSingleWidgetState extends State<_AnimatedSingleWidget> {
       );
     }
     return child;
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
   }
 }
